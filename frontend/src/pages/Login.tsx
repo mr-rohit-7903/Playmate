@@ -1,11 +1,38 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { Mail, Lock } from "lucide-react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase"; // 👈 make sure this path matches your file
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      setLoading(true);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  console.log("Logged in:", userCredential.user);
+  navigate("/");
+    } catch (err: any) {
+      console.error(err);
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -49,47 +76,67 @@ const Login = () => {
               </CardHeader>
 
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      className="pl-9"
-                    />
+                <form className="space-y-4" onSubmit={handleLogin}>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        className="pl-9"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      className="pl-9"
-                    />
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="••••••••"
+                        className="pl-9"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <button
-                    type="button"
-                    className="text-primary hover:underline"
+                  <div className="flex items-center justify-between text-sm">
+                    <button
+                      type="button"
+                      className="text-primary hover:underline"
+                      // onClick={...} // optional: add reset password logic later
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+
+                  {error && (
+                    <p className="text-sm text-red-500">
+                      {error}
+                    </p>
+                  )}
+
+                  <Button
+                    size="lg"
+                    className="w-full rounded-full mt-2"
+                    type="submit"
+                    disabled={loading}
                   >
-                    Forgot password?
-                  </button>
-                </div>
+                    {loading ? "Logging in..." : "Log In"}
+                  </Button>
+                </form>
               </CardContent>
 
               <CardFooter className="flex flex-col gap-4">
-                <Button size="lg" className="w-full rounded-full">
-                  Log In
-                </Button>
-
                 <p className="text-sm text-center text-muted-foreground">
                   New to <span className="italic">PlayMate</span>?{" "}
                   <a

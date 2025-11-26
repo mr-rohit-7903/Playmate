@@ -11,8 +11,28 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate, useLocation } from "react-router-dom";
 
 const queryClient = new QueryClient();
+
+
+// Protect routes that require authentication
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+  if (loading) return null;
+  if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
+  return children;
+}
+
+// Redirect authenticated users away from login/register
+function RedirectIfAuth({ children }: { children: JSX.Element }) {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) return <Navigate to="/" replace />;
+  return children;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -21,13 +41,41 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/tournaments" element={<Tournaments />} />
-          <Route path="/venues" element={<Venues />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/careers" element={<Careers />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } />
+          <Route path="/tournaments" element={
+            <ProtectedRoute>
+              <Tournaments />
+            </ProtectedRoute>
+          } />
+          <Route path="/venues" element={
+            <ProtectedRoute>
+              <Venues />
+            </ProtectedRoute>
+          } />
+          <Route path="/community" element={
+            <ProtectedRoute>
+              <Community />
+            </ProtectedRoute>
+          } />
+          <Route path="/careers" element={
+            <ProtectedRoute>
+              <Careers />
+            </ProtectedRoute>
+          } />
+          <Route path="/login" element={
+            <RedirectIfAuth>
+              <Login />
+            </RedirectIfAuth>
+          } />
+          <Route path="/signup" element={
+            <RedirectIfAuth>
+              <Register />
+            </RedirectIfAuth>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
