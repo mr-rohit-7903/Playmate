@@ -9,7 +9,7 @@ import Venues from "./pages/Venues";
 import Community from "./pages/Community";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
