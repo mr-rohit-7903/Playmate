@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import { Users, Trophy, MapPin, Calendar } from "lucide-react";
+import { url } from "inspector";
 
 const Home = () => {
   const stats = [
@@ -23,6 +24,7 @@ const Home = () => {
         "Discover and book top-rated fitness studios, sports courts, and open fields near you. Whether you're training solo or playing with friends, find the perfect space in seconds. Filter by sport, time, or price — and join thousands powering their play every day.",
       buttonText: "Go to Venues Section",
       buttonLink: "/venues",
+      url: "venue.jpg",
     },
     {
       title: "Find Nearby Tournaments",
@@ -30,6 +32,7 @@ const Home = () => {
         "From local leagues to major city tournaments, find all the top competitions near you. Get live updates, entry info, and register in seconds. Whether you're here to win or just play hard, your next big game is just a search away.",
       buttonText: "Go to Tournaments Section",
       buttonLink: "/tournaments",
+      url: "tournament.jpg",
     },
   ];
 
@@ -65,21 +68,8 @@ const Home = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-32 bg-hero-gradient bg-sports-pattern overflow-hidden">
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
-        <div className="container mx-auto px-4 pt-12">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-              PlayMate
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-12">
-              Your Sports Companion
-            </p>
-          </div>
-
-          {/* Sports Icons Border */}
-          <div className="mt-16 h-16 bg-white/10 backdrop-blur-sm border-t border-b border-white/20" />
-        </div>
+      <section className="relative h-[100vh] bg-sports-pattern bg-cover bg-center flex items-center justify-center">
+        <img src="hero.svg" alt="" />
       </section>
 
       {/* Impact Section */}
@@ -129,9 +119,8 @@ const Home = () => {
                 } gap-12 items-center`}
               >
                 <div className="flex-1">
-                  <div className="w-full aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center">
-                    <div className="text-6xl">🏃</div>
-                  </div>
+                  <img src={feature.url} alt="" className="w-full aspect-square" />
+                  
                 </div>
                 <div className="flex-1 space-y-6">
                   <h3 className="text-3xl font-bold">{feature.title}</h3>
@@ -154,11 +143,6 @@ const Home = () => {
           <div className="max-w-4xl">
             {communityFeatures.map((feature, index) => (
               <div key={index} className="mb-12">
-                <div className="flex items-start gap-4 mb-8">
-                  <div className="w-full aspect-[3/2] bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center">
-                    <div className="text-6xl">🏆</div>
-                  </div>
-                </div>
                 <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                   {feature.description}

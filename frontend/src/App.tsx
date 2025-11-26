@@ -9,6 +9,8 @@ import Venues from "./pages/Venues";
 import Community from "./pages/Community";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/login";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/venues" element={<Venues />} />
           <Route path="/community" element={<Community />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
