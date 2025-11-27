@@ -68,8 +68,9 @@ const Register = () => {
               <p className="text-sm tracking-widest uppercase text-primary">
                 Create your
               </p>
-              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                <span className="italic">PlayMate</span> Account
+              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight flex items-center gap-3">
+                <img src="/logo-b.png" alt="PlayMate" className="h-12 w-auto" />
+                Account
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl">
                 Join the community of athletes, book venues instantly, compete in tournaments,

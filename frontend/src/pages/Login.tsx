@@ -45,8 +45,9 @@ const Login = () => {
               <p className="text-sm tracking-widest uppercase text-primary">
                 Welcome back to
               </p>
-              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                <span className="italic">PlayMate</span> Login
+              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight flex items-center gap-3">
+                <img src="/logo-b.png" alt="PlayMate" className="h-12 w-auto" />
+                Login
               </h1>
               <p className="text-lg text-muted-foreground max-w-xl">
                 Pick up where you left off. Track your matches, join tournaments,

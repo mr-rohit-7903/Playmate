@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import { Users, Trophy, MapPin, Calendar } from "lucide-react";
 import { url } from "inspector";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const stats = [
@@ -24,7 +25,7 @@ const Home = () => {
         "Discover and book top-rated fitness studios, sports courts, and open fields near you. Whether you're training solo or playing with friends, find the perfect space in seconds. Filter by sport, time, or price — and join thousands powering their play every day.",
       buttonText: "Go to Venues Section",
       buttonLink: "/venues",
-      url: "venue.jpg",
+      url: "home/venue.jpg",
     },
     {
       title: "Find Nearby Tournaments",
@@ -32,7 +33,7 @@ const Home = () => {
         "From local leagues to major city tournaments, find all the top competitions near you. Get live updates, entry info, and register in seconds. Whether you're here to win or just play hard, your next big game is just a search away.",
       buttonText: "Go to Tournaments Section",
       buttonLink: "/tournaments",
-      url: "tournament.jpg",
+      url: "home/tournament.jpg",
     },
   ];
 
@@ -65,18 +66,23 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <div
+        className=" top-0 left-0 right-0 h-16 fixed
+        bg-[linear-gradient(90deg,rgba(0,123,255,0.45)_0%,rgba(10,15,44,0.45)_97%)] z-40"
+      ></div>
       <Navbar />
+      
 
       {/* Hero Section */}
-      <section className="relative h-[100vh] bg-sports-pattern bg-cover bg-center flex items-center justify-center">
-        <img src="hero.svg" alt="" />
+      <section className=" h-[100vh] bg-contain">
+        <img src="home/hero.png" alt="Hero" className="w-full h-full object-contain" />
       </section>
 
       {/* Impact Section */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            The <span className="italic">PlayMate</span> Impact
+          <h2 className="text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+            The <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" /> Impact
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -106,8 +112,8 @@ const Home = () => {
       {/* Highlight Features */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-16">
-            Highlight <span className="italic">PlayMate</span> Features
+          <h2 className="text-4xl font-bold text-center mb-16 flex items-center justify-center gap-3">
+            Highlight <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" /> Features
           </h2>
 
           <div className="space-y-24">
@@ -127,9 +133,11 @@ const Home = () => {
                   <p className="text-lg text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
-                  <Button size="lg" className="rounded-full">
-                    {feature.buttonText}
-                  </Button>
+                  <Link to={feature.buttonLink} >
+                    <Button size="lg" className="mt-4 rounded-full">
+                      {feature.buttonText}
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -150,9 +158,11 @@ const Home = () => {
               </div>
             ))}
 
-            <Button size="lg" className="rounded-full">
-              Go to Community Section
-            </Button>
+            <Link to="/community">
+              <Button size="lg" className="rounded-full">
+                Go to Community Section
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
