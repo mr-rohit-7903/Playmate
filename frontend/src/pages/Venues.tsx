@@ -66,7 +66,7 @@ const Venues = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-20 pb-16 bg-hero-gradient">
+      <section className="pt-32 pb-16 bg-hero-gradient">
         <div className="container mx-auto px-4 pt-12">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">

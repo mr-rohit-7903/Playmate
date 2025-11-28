@@ -9,21 +9,29 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth(); // 👈 from your auth hook
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
+  const isProfilePage = location.pathname === "/profile";
+  const isLoginPage = location.pathname === "/login";
+  const isSignupPage = location.pathname === "/signup";
+
   const handleLogout = async () => {
-    await logout();
-    navigate("/login");
+    try {
+      await logout();
+      toast.success("Logged out successfully 👋");
+      navigate("/login");
+    } catch (err) {
+      toast.error("Logout failed. Please try again.");
+    }
   };
 
   const goToProfile = () => navigate("/profile");
-
-  const isProfilePage = location.pathname === "/profile";
 
   return (
     <nav
@@ -39,7 +47,7 @@ const Navbar = () => {
             <img src="/logo-w.png" alt="playmate" className="h-8 w-auto" />
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <Link to="/" className="text-white hover:text-white/80 transition-colors">Home</Link>
             <Link to="/venues" className="text-white hover:text-white/80 transition-colors">Venues</Link>
@@ -47,21 +55,25 @@ const Navbar = () => {
             <Link to="/community" className="text-white hover:text-white/80 transition-colors">Community</Link>
             <Link to="/careers" className="text-white hover:text-white/80 transition-colors">Careers</Link>
 
-            {/* Button area changes based on auth */}
+            {/* Auth Buttons */}
             {!user ? (
               <Button
                 asChild
-                variant="outline"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                className="bg-white text-primary font-semibold px-6 rounded-full hover:bg-white/90 transition shadow"
               >
-                <Link to="/login">Login</Link>
+                {isLoginPage ? (
+                  <Link to="/signup">Register</Link>
+                ) : isSignupPage ? (
+                  <Link to="/login">Login</Link>
+                ) : (
+                  <Link to="/login">Login</Link>
+                )}
               </Button>
             ) : (
               <>
                 {isProfilePage ? (
                   <Button
-                    variant="outline"
-                    className="bg-red-500/20 border-red-500/40 text-red-300 hover:bg-red-500/30"
+                    className="bg-red-500 text-white font-semibold px-6 rounded-full hover:bg-red-600 transition shadow"
                     onClick={handleLogout}
                   >
                     Logout
@@ -69,18 +81,14 @@ const Navbar = () => {
                 ) : (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <button className="rounded-full bg-white/20 p-2 border border-white/30 text-white hover:bg-white/30 transition">
+                      <button className="rounded-full bg-white text-primary font-bold p-2 border-2 border-white hover:bg-white/90 transition shadow">
                         <User className="h-5 w-5" />
                       </button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end" className="w-44">
-                      <DropdownMenuItem onClick={goToProfile}>
-                        Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleLogout}>
-                        Logout
-                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={goToProfile}>Profile</DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
@@ -88,34 +96,49 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
             <Menu size={24} />
           </button>
         </div>
 
-        {/* Mobile dropdown menu */}
+        {/* Mobile Menu Drawer */}
         {isOpen && (
           <div className="md:hidden py-4 space-y-4">
-            <Link to="/" className="block text-white hover:text-white/80 transition-colors">Home</Link>
-            <Link to="/venues" className="block text-white hover:text-white/80 transition-colors">Venues</Link>
-            <Link to="/tournaments" className="block text-white hover:text-white/80 transition-colors">Tournaments</Link>
-            <Link to="/community" className="block text-white hover:text-white/80 transition-colors">Community</Link>
-            <Link to="/careers" className="block text-white hover:text-white/80 transition-colors">Careers</Link>
+            <Link to="/" onClick={() => setIsOpen(false)} className="block text-white hover:text-white/80">Home</Link>
+            <Link to="/venues" onClick={() => setIsOpen(false)} className="block text-white hover:text-white/80">Venues</Link>
+            <Link to="/tournaments" onClick={() => setIsOpen(false)} className="block text-white hover:text-white/80">Tournaments</Link>
+            <Link to="/community" onClick={() => setIsOpen(false)} className="block text-white hover:text-white/80">Community</Link>
+            <Link to="/careers" onClick={() => setIsOpen(false)} className="block text-white hover:text-white/80">Careers</Link>
 
             {!user ? (
               <Button
-                className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
                 asChild
+                className="w-full bg-white text-primary font-semibold rounded-full hover:bg-white/90 shadow"
               >
-                <Link to="/login">Login</Link>
+                {isLoginPage ? (
+                  <Link to="/signup" onClick={() => setIsOpen(false)}>Register</Link>
+                ) : isSignupPage ? (
+                  <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                ) : (
+                  <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                )}
               </Button>
             ) : (
               <div className="space-y-2">
-                <Button onClick={goToProfile} className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+                <Button
+                  onClick={() => {
+                    goToProfile();
+                    setIsOpen(false);
+                  }}
+                  className="w-full bg-primary text-white font-semibold rounded-full hover:bg-primary/90 shadow"
+                >
                   Profile
                 </Button>
-                <Button onClick={handleLogout} className="w-full bg-red-500/20 border-red-500/40 text-red-300 hover:bg-red-500/30">
+                <Button
+                  onClick={handleLogout}
+                  className="w-full bg-red-500 text-white font-semibold rounded-full hover:bg-red-600 shadow"
+                >
                   Logout
                 </Button>
               </div>

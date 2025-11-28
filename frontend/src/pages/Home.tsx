@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
-import { Users, Trophy, MapPin, Calendar } from "lucide-react";
-import { url } from "inspector";
+import { Users, Trophy, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -65,107 +63,120 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div
-        className=" top-0 left-0 right-0 h-16 fixed
-        bg-[linear-gradient(90deg,rgba(0,123,255,0.45)_0%,rgba(10,15,44,0.45)_97%)] z-40"
-      ></div>
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
-      
 
-      {/* Hero Section */}
-      <section className=" h-[100vh] bg-contain">
-        <img src="home/hero.png" alt="Hero" className="w-full h-full object-contain" />
-      </section>
+      {/* Wrap all content in main and push it below fixed navbar */}
+      <main className="pt-16">
 
-      {/* Impact Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3">
-            The <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" /> Impact
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-5xl font-bold text-primary mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-lg text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+        {/* Hero Section */}
+        <section className="w-full">
+          <div className="w-full h-[35vh] sm:h-[50vh] md:h-[70vh] lg:h-[100vh]">
+            <img
+              src="home/hero.png"
+              alt="Hero"
+              className="w-full h-full object-cover"
+            />
           </div>
+        </section>
+        {/* Impact Section */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+              <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" />{" "}
+              Impact
+            </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {secondaryStats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-5xl font-bold text-primary mb-2">
-                  {stat.value}
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-5xl font-bold text-primary mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-lg text-muted-foreground">
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-lg text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {secondaryStats.map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-5xl font-bold text-primary mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-lg text-muted-foreground">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Highlight Features */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-16 flex items-center justify-center gap-3">
-            Highlight <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" /> Features
-          </h2>
+        {/* Highlight Features */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold text-center mb-16 flex items-center justify-center gap-3">
+              <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" />{" "}
+              Features
+            </h2>
 
-          <div className="space-y-24">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className={`flex flex-col ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                } gap-12 items-center`}
-              >
-                <div className="flex-1">
-                  <img src={feature.url} alt="" className="w-full aspect-square" />
-                  
+            <div className="space-y-24">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className={`flex flex-col ${
+                    index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  } gap-12 items-center`}
+                >
+                  <div className="flex-1 w-full">
+                    <img
+                      src={feature.url}
+                      alt={feature.title}
+                      className="w-full aspect-square object-cover rounded-2xl"
+                    />
+                  </div>
+                  <div className="flex-1 space-y-6">
+                    <h3 className="text-3xl font-bold">{feature.title}</h3>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                    <Link to={feature.buttonLink}>
+                      <Button size="lg" className="mt-4 rounded-full">
+                        {feature.buttonText}
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="flex-1 space-y-6">
-                  <h3 className="text-3xl font-bold">{feature.title}</h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Community Features */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl">
+              {communityFeatures.map((feature, index) => (
+                <div key={index} className="mb-12">
+                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+                  <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                     {feature.description}
                   </p>
-                  <Link to={feature.buttonLink} >
-                    <Button size="lg" className="mt-4 rounded-full">
-                      {feature.buttonText}
-                    </Button>
-                  </Link>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              ))}
 
-      {/* Community Features */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl">
-            {communityFeatures.map((feature, index) => (
-              <div key={index} className="mb-12">
-                <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-
-            <Link to="/community">
-              <Button size="lg" className="rounded-full">
-                Go to Community Section
-              </Button>
-            </Link>
+              <Link to="/community">
+                <Button size="lg" className="rounded-full">
+                  Go to Community Section
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
     </div>
   );
 };

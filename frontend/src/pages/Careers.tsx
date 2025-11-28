@@ -65,7 +65,7 @@ const Careers = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-sports-pattern bg-cover bg-center">
+      <section className="pt-16 bg-sports-pattern bg-cover bg-center">
         <div className="min-h-[320px] md:min-h-[380px] bg-gradient-to-r from-background/95 via-background/85 to-background/40 flex items-center">
           <div className="container mx-auto px-4 py-16 md:py-20">
             <div className="max-w-3xl space-y-6">

@@ -60,12 +60,12 @@ const Register = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-sports-pattern bg-cover bg-center">
+      <section className="min-h-screen pt-16 flex items-center justify-center bg-sports-pattern bg-cover bg-center">
         <div className="container mx-auto px-4">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             {/* Left side – copy */}
             <div className="space-y-6 text-left">
-              <p className="text-sm tracking-widest uppercase text-primary">
+              <p className="text-4xl md:text-5xl font-extrabold leading-tight ">
                 Create your
               </p>
               <h1 className="text-4xl md:text-5xl font-extrabold leading-tight flex items-center gap-3">

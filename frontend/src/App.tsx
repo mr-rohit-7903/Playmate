@@ -11,8 +11,8 @@ import Venues from "./pages/Venues";
 import Community from "./pages/Community";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/user/Login";
+import Register from "./pages/user/Register";
 import Profile from "./pages/user/Profile";
 
 const queryClient = new QueryClient();
