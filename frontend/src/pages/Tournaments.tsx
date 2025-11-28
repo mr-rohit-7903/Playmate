@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Grid, List } from "lucide-react";
+import { Grid, List } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 interface Tournament {
@@ -24,7 +24,8 @@ interface Tournament {
 const Tournaments = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [location, setLocation] = useState("Kharghar");
-  const [selectedSport, setSelectedSport] = useState("Cricket, Football");
+  const [selectedSport, setSelectedSport] = useState<"all" | "Cricket" | "Football">("all");
+  const [searchName, setSearchName] = useState("");
 
   const tournaments: Tournament[] = [
     { id: 1, name: "Kharghar Premier League", sport: "Cricket", prize: "INR 30,000", fee: "INR 500", status: "Live" },
@@ -35,6 +36,27 @@ const Tournaments = () => {
     { id: 6, name: "Indian Cricket League", sport: "Cricket", prize: "INR 50,000", fee: "INR 400", status: "Ongoing" },
     { id: 7, name: "United Football League", sport: "Football", prize: "INR 60,000", fee: "INR 100", status: "Expired" },
   ];
+
+  // Filtering + pagination
+  const pageSize = 5; // items per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const filteredTournaments = tournaments.filter((t) => {
+    const matchesSport =
+      selectedSport === "all" ? true : t.sport === selectedSport;
+
+    const matchesName = searchName
+      ? t.name.toLowerCase().includes(searchName.toLowerCase())
+      : true;
+
+    return matchesSport && matchesName;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredTournaments.length / pageSize));
+  const paginatedTournaments = filteredTournaments.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const getStatusColor = (status: Tournament["status"]) => {
     switch (status) {
@@ -88,33 +110,31 @@ const Tournaments = () => {
           </p>
 
           <div className="grid md:grid-cols-4 gap-4 mb-6">
-            <Input placeholder="Enter Location" className="md:col-span-1" />
-            <Select>
+            <Input
+              placeholder="Search by tournament name"
+              className="md:col-span-1"
+              value={searchName}
+              onChange={(e) => {
+                setSearchName(e.target.value);
+                setCurrentPage(1); // reset to first page on search
+              }}
+            />
+            <Select
+              value={selectedSport}
+              onValueChange={(val: "all" | "Cricket" | "Football") => {
+                setSelectedSport(val);
+                setCurrentPage(1); // reset to first page on filter change
+              }}
+            >
               <SelectTrigger className="md:col-span-2">
-                <SelectValue placeholder="Select Sports" />
+                <SelectValue placeholder="Select Sport" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cricket">Cricket</SelectItem>
-                <SelectItem value="football">Football</SelectItem>
-                <SelectItem value="both">Cricket, Football</SelectItem>
+                <SelectItem value="all">All Sports</SelectItem>
+                <SelectItem value="Cricket">Cricket</SelectItem>
+                <SelectItem value="Football">Football</SelectItem>
               </SelectContent>
             </Select>
-            <Button className="md:col-span-1">
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-sm text-muted-foreground">
-              Location: <strong>{location}</strong>
-            </span>
-            <span className="text-sm text-muted-foreground">
-              Sport: <strong>{selectedSport}</strong>
-            </span>
-            <Button variant="link" size="sm" className="text-primary">
-              Apply Filter
-            </Button>
           </div>
 
           <div className="flex items-center justify-between mb-6">
@@ -139,59 +159,116 @@ const Tournaments = () => {
             </div>
           </div>
 
-          {/* Table */}
-          <div className="bg-card rounded-lg border overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Sr. No.</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Tournament Name</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Sport</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Prize Money</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Registration fee</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tournaments.map((tournament, index) => (
-                  <tr
-                    key={tournament.id}
-                    className={`border-t hover:bg-muted/50 cursor-pointer ${
-                      tournament.status === "Ongoing" ? "bg-success/5" : ""
-                    }`}
-                  >
-                    <td className="px-6 py-4">{index + 1}</td>
-                    <td className="px-6 py-4 font-medium">{tournament.name}</td>
-                    <td className="px-6 py-4">{tournament.sport}</td>
-                    <td className="px-6 py-4">{tournament.prize}</td>
-                    <td className="px-6 py-4">{tournament.fee}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                          tournament.status
-                        )}`}
-                      >
-                        {tournament.status}
-                      </span>
-                    </td>
+          {/* List / Grid View */}
+          {viewMode === "list" ? (
+            <div className="bg-card rounded-lg border overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-muted/50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Sr. No.</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Tournament Name</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Sport</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Prize Money</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Registration fee</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {paginatedTournaments.map((tournament, index) => (
+                    <tr
+                      key={tournament.id}
+                      className={`border-t hover:bg-muted/50 cursor-pointer ${
+                        tournament.status === "Ongoing" ? "bg-success/5" : ""
+                      }`}
+                    >
+                      <td className="px-6 py-4">
+                        {(currentPage - 1) * pageSize + index + 1}
+                      </td>
+                      <td className="px-6 py-4 font-medium">{tournament.name}</td>
+                      <td className="px-6 py-4">{tournament.sport}</td>
+                      <td className="px-6 py-4">{tournament.prize}</td>
+                      <td className="px-6 py-4">{tournament.fee}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                            tournament.status
+                          )}`}
+                        >
+                          {tournament.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {paginatedTournaments.map((tournament, index) => (
+                <div
+                  key={tournament.id}
+                  className={`bg-card rounded-lg border p-4 hover:bg-muted/50 cursor-pointer ${
+                    tournament.status === "Ongoing" ? "bg-success/5" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-muted-foreground">
+                      #{(currentPage - 1) * pageSize + index + 1}
+                    </span>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        tournament.status
+                      )}`}
+                    >
+                      {tournament.status}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold text-lg mb-1">{tournament.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Sport: {tournament.sport}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">Prize:</span> {tournament.prize}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">Registration:</span> {tournament.fee}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Pagination */}
           <div className="flex items-center justify-center gap-2 mt-6">
-            <Button variant="ghost" size="sm">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
               ← Previous
             </Button>
-            <Button variant="default" size="sm">1</Button>
-            <Button variant="ghost" size="sm">2</Button>
-            <Button variant="ghost" size="sm">3</Button>
-            <span className="px-2">...</span>
-            <Button variant="ghost" size="sm">67</Button>
-            <Button variant="ghost" size="sm">68</Button>
-            <Button variant="ghost" size="sm">
+
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const page = i + 1;
+              return (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </Button>
+              );
+            })}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
               Next →
             </Button>
           </div>

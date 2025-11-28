@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Tournaments from "./pages/Tournaments";
 import Venues from "./pages/Venues";
@@ -11,8 +13,7 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { useAuth } from "@/hooks/useAuth";
-import { Navigate, useLocation } from "react-router-dom";
+import Profile from "./pages/user/Profile";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +77,12 @@ const App = () => (
               <Register />
             </RedirectIfAuth>
           } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
