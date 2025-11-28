@@ -83,6 +83,7 @@ const Home = () => {
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+              The
               <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" />{" "}
               Impact
             </h2>
@@ -119,8 +120,9 @@ const Home = () => {
         <section className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-center mb-16 flex items-center justify-center gap-3">
+              What
               <img src="/logo-b.png" alt="PlayMate" className="h-10 w-auto" />{" "}
-              Features
+              Offers
             </h2>
 
             <div className="space-y-24">
